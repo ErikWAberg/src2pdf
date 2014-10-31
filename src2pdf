@@ -15,36 +15,28 @@ folder=`readlink -ve "$1"`
 output=`readlink -vf "$3"`
 [[ "$output" != *".pdf" ]] && output+=".pdf"
 
+tmp="/tmp/src2pdf_$USER/"
+[ -d "$tmp" ] || mkdir "$tmp"
+
 lang="$2"
 args="${*:4}"
 
-echo "Folder: $folder"
-echo "Langs: $lang"
-echo "Output: $output"
-echo "a2ps args: $args"
-
-tmp="/tmp/src2pdf_$USER/"
-
-[ -d "$tmp" ] || mkdir "$tmp"
+echo "Search folder: $folder"
+echo "File types: $lang"
+echo "Output file: $output"
+echo "Layout args: $args"
 
 reg="'.*\\.\\(""$(echo "$lang" | sed 's.,.\\|.g')""\)'" 
 
-find=$(echo "find $folder -regex $reg")
-eval $find | while read -r line
+eval "find $folder -regex $reg" | while read -r line
 do
-    shortpath=${line#$folder}
-    srcfile=$(echo $shortpath | tr "/" ".")
-    IFS='/' read -a patharray <<< "$line"
-    filename="${patharray[-1]}"
-    filename="${filename%"."*}.pdf"
-    srcfile="$tmp$srcfile"
     a2ps --columns=2 -q -T3 $args -P pdf "$line"
-    mv "$filename" "${srcfile}.pdf"
+    IFS='/' read -a patharray <<< "$line"
+#    filename="${patharray[-1]%"."*}.pdf"
+    mv "${patharray[-1]%"."*}.pdf" "$tmp"`echo "${line#$folder}" | tr "/" "."`".pdf"      
 done
 
-files=`find "$tmp" -name "*.pdf"`
-psfiles=$(echo "$files" | tr "\n" " ")
-
+psfiles=$(echo `find "$tmp" -name "*.pdf"` | tr "\n" " ")
 pdfunite $psfiles $output
 rm -rf "$tmp"
 echo "done"
