@@ -61,7 +61,7 @@ psfiles=$(echo "$files" | tr "\n" " ")
 allpdfs=""
 for psfile in $psfiles
 do
-        allpdfs+="$psfile "
+    allpdfs+="$psfile "
 done
 pdfunite $allpdfs $output
 rm -rf "$tmp"
