@@ -27,13 +27,8 @@ tmp="/tmp/src2pdf_$USER/"
 
 [ -d "$tmp" ] || mkdir "$tmp"
 
-reg="'.*\\.\\("
-langs=$(echo $lang | tr "," "\n")
-for l in $langs
-do
-    reg+=$l"\\|"
-done
-reg=${reg::-1}")'"
+reg="'.*\\.\\(""$(echo "$lang" | sed 's.,.\\|.g')""\)'" 
+
 find=$(echo "find $folder -regex $reg")
 eval $find | while read -r line
 do
