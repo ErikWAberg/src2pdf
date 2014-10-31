@@ -23,7 +23,6 @@ echo "Langs: $lang"
 echo "Output: $output"
 echo "a2ps args: $args"
 
-#tmp="$folder$USER"_src2pdf/
 tmp="/tmp/src2pdf_$USER/"
 #tmp+="/"
 echo "$tmp"
