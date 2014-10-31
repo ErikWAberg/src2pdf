@@ -24,8 +24,7 @@ echo "Output: $output"
 echo "a2ps args: $args"
 
 tmp="/tmp/src2pdf_$USER/"
-#tmp+="/"
-echo "$tmp"
+
 [ -d "$tmp" ] || mkdir "$tmp"
 
 reg="'.*\\.\\("
