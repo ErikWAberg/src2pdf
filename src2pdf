@@ -32,7 +32,6 @@ eval "find $folder -regex $reg" | while read -r line
 do
     a2ps --columns=2 -q -T3 $args -P pdf "$line"
     IFS='/' read -a patharray <<< "$line"
-#    filename="${patharray[-1]%"."*}.pdf"
     mv "${patharray[-1]%"."*}.pdf" "$tmp"`echo "${line#$folder}" | tr "/" "."`".pdf"      
 done
 
