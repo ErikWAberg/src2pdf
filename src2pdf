@@ -1,10 +1,10 @@
 #!/bin/bash
 if [ $# -lt 3 ]
 then 
-	echo "Usage: src2pdf <src-loc> <file-type1,file-type2,...> <out-file> [a2ps layout args (dont specify printer!)]"
-	echo "Example: src2pdf ~/git/c-proj c,h ~/git/c-proj/doc -T4 --columns=1"
-	echo "Default a2ps: a2ps --columns=2 -T3 -q"
-	exit 0
+    echo "Usage: src2pdf <src-loc> <file-type1,file-type2,...> <out-file> [a2ps layout args (dont specify printer!)]"
+    echo "Example: src2pdf ~/git/c-proj c,h ~/git/c-proj/doc -T4 --columns=1"
+    echo "Default a2ps: a2ps --columns=2 -T3 -q"
+    exit 0
 fi
 
 set -e
