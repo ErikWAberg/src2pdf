@@ -1,2 +1,2 @@
 Example: src2pdf ~/git/c-proj c,h ~/git/c-proj/doc -T4 --columns=1
-=> ~/git/c-proj/doc.pdf containing all *.c and .h files found in ~/git/c-proj/
+=> ~/git/c-proj/doc.pdf containing all .c and .h files found in ~/git/c-proj/
