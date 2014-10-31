@@ -1,0 +1,66 @@
+#!/bin/bash
+if [ $# -lt 3 ]
+then 
+	echo "Usage: src2pdf <src-loc> <file-typ1,file-type2,...> <out-file> [a2ps layout args (dont specify printer!)]"
+	echo "Example: src2pdf ~/git/c-proj c,h ~/git/c-proj/doc -T4 --columns=1"
+	echo "Default a2ps: a2ps --columns=2 -T3 -q"
+	exit 0
+fi
+
+set -e
+
+folder=`readlink -ve "$1"`
+[[ $folder != */ ]] && folder+="/"
+
+output=`readlink -vf "$3"`
+[[ "$output" != *".pdf" ]] && output+=".pdf"
+
+lang="$2"
+args="${*:4}"
+
+echo "Folder: $folder"
+echo "Langs: $lang"
+echo "Output: $output"
+echo "a2ps args: $args"
+
+tmp="$folder$USER"_src2pdf/
+
+[ -d "$tmp" ] || mkdir "$tmp"
+
+reg="'.*\\.\\("
+langs=$(echo $lang | tr "," "\n")
+for l in $langs
+do
+    reg+=$l"\\|"
+done
+reg=${reg::-1}")'"
+find=$(echo "find $folder -regex $reg")
+eval $find | while read -r line
+do
+    name=""
+    shortpath=${line#$folder}
+    srcfile=$(echo $shortpath | tr "/" ".")
+    
+    filepath=$(echo $line | tr "/" "\n")
+    for subpath in $filepath
+    do
+        name="$subpath"
+    done
+    
+    name="${name%"."*}.pdf"
+    srcfile="$tmp$srcfile"
+    a2ps --columns=2 -q -T3 $args -P pdf "$line"
+    mv "$name" "${srcfile}.pdf"
+done
+
+files=`find "$tmp" -name "*.pdf"`
+psfiles=$(echo "$files" | tr "\n" " ")
+
+allpdfs=""
+for psfile in $psfiles
+do
+        allpdfs+="$psfile "
+done
+pdfunite $allpdfs $output
+rm -rf "$tmp"
+echo "done"
